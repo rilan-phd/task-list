@@ -66,17 +66,20 @@ Route::get('/', function () use ($tasks)  {
     return redirect()->route('tasks.index');
 });
 
-Route::get('/task', function () use ($tasks){
+Route::get('/task', function (){
+    $tasks = \App\Models\Task::latest()->get();
    return view('index', ['tasks' => $tasks]);
 })->name('tasks.index');
 
-Route::get('/{id}', function ($id) use ($tasks){
+Route::get('/{id}', function ($id){
     //return 'Show single task';
-    $task = collect($tasks)->firstWhere('id', $id);
+//    $task = collect($tasks)->firstWhere('id', $id);
+//
+//    if (!$task){
+//        abort(Response::HTTP_NOT_FOUND);
+//    }
 
-    if (!$task){
-        abort(Response::HTTP_NOT_FOUND);
-    }
+    $task = \App\Models\Task::findOrFail($id);
 
     return view('show', ['task' => $task]);
 })->name('tasks.show');
